@@ -5,7 +5,7 @@ import org.b3log.latke.http.BaseServer;
 import org.b3log.latke.http.Dispatcher;
 import org.b3log.latke.ioc.BeanManager;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
-import top.myjinji.processor.IndexProcessor;
+import top.myjinji.processor.MainProcessor;
 
 /**
  * Server.
@@ -28,11 +28,11 @@ public class Server extends BaseServer {
         }));
 
         final BeanManager beanManager = BeanManager.getInstance();
+        final MainProcessor mainProcessor = beanManager.getReference(MainProcessor.class);
 
         // 配置路由
         final Dispatcher.RouterGroup routeGroup = Dispatcher.group();
-        IndexProcessor.register();
-
+        routeGroup.get("/", mainProcessor::index);
         Dispatcher.mapping();
 
         server.start(8080);
